@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,14 @@
     "url": "https://github.com/Team-DAD/summaryProxyServer/issues"
   },
   "homepage": "https://github.com/Team-DAD/summaryProxyServer#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.16.4",
+    "node-fetch": "^2.2.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
 }
