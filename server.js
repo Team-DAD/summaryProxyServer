@@ -1,82 +1,57 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const fetch = require('node-fetch');
+const proxy = require('http-proxy-middleware');
+const compression = require('compression');
+
+app.use(compression());
+
+// app.get('/', (req, res) => {
+//   res.redirect('movies/1');
+// })
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/movies/:movieId/summary', (req, res) => {
+// app.get("/movies/:id", function(req, res) {
+//   const reactPath = path.join(__dirname, "public/index.html");
+//   res.sendFile(reactPath);
+// });
 
-  fetch(`http://localhost:3007/api/movies/${req.params.movieId}/summary`)
-  .then((response) => {
-    response.json().then((data) => {
-      res.send(data);
-    })
+app.use('/api/movies/:movieId/summary', 
+  proxy({
+    target: 'http://localhost:3007'
   })
-  .catch((error) => {
-    res.status(500).send(error)
-  })
-})
+)
 
-app.get('/api/movies/:movieid/rating', (req, res) => {
-  fetch(`http://localhost:3013/api/movies/${req.params.movieid}/rating`)
-  .then((response) => {
-    response.json().then((data) => {
-      res.send(data);
-    })
+app.use('/api/movies/:movieid/rating', 
+  proxy({
+    target: 'http://localhost:3013'
   })
-  .catch(error => {
-    res.status(500).send(error.message);
-  })
-})
+)
 
-app.get('/api/movies/:movieid/reviews', (req, res) => {
-  fetch(`http://localhost:3013/api/movies/${req.params.movieid}/reviews`)
-  .then(response => {
-    response.json().then(data => {
-      res.send(data);
-    })
+app.get('/api/movies/:movieid/reviews', 
+  proxy({
+    target: 'http://localhost:3013'
   })
-  .catch(error => {
-    res.status(500).send(error);
-  })
-})
+)
 
-app.get('/api/movies/:genre/relatedmovies', (req, res) => {
-  fetch(`http://localhost:3003/api/movies/${req.params.genre}/relatedmovies`)
-  .then(response => {
-    response.json().then(data => {
-      res.send(data);
-    })
+app.get('/api/movies/:genre/relatedmovies',
+  proxy({
+    target: 'http://localhost:3003'
   })
-  .catch(error => {
-    res.status(500).send(error);
-  })
-})
+)
 
-app.get('/api/movies/:movie/:date/:location', (req, res) => {
-  fetch(`http://localhost:3002/api/movies/${req.params.movie}/${req.params.date}/${req.params.location}`)
-  .then(response => {
-    response.json().then(data => {
-      res.send(data);
-    })
+app.get('/api/movies/:movie/:date/:location',
+  proxy({
+    target: 'http://localhost:3002'
   })
-  .catch(error => {
-    res.status(500).send(error);
-  })
-})
+)
 
-app.get('/api/moviesbyid/:movieid/:date/:location', (req, res) => {
-  fetch(`http://localhost:3002/api/moviesbyid/${req.params.movieid}/${req.params.date}/${req.params.location}`)
-  .then(response => {
-    response.json().then(data => {
-      res.send(data);
-    })
+app.get('/api/moviesbyid/:movieid/:date/:location',
+  proxy({
+    target: 'http://localhost:3002'
   })
-  .catch(error => {
-    res.status(500).send(error);
-  })
-})
+)
 
 app.listen(3000, () => {
   console.log('listening at port 3000');
